@@ -15,24 +15,19 @@ import {
   InputGroup,
 } from "@heroui/react";
 
-import {
-  FaUser,
-  FaLock,
-  FaEye,
-  FaEyeSlash,
-  FaImage,
-} from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaImage } from "react-icons/fa";
 
 import { MdEmail } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { ImSpinner8 } from "react-icons/im";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [pending, setPending] = useState(false);
-  const [showPassword, setShowPassword]=useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState({
     type: "",
     text: "",
@@ -41,50 +36,48 @@ export default function SignupPage() {
   const handleSignup = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const userData=Object.fromEntries(formData.entries())
-    const {name,email,image,password,confirmPassword}=userData;
-    setMessage({
-      type: "",
-      text: "",
-    });
+    const userData = Object.fromEntries(formData.entries());
+    const { name, email, image, password, confirmPassword } = userData;
+
+    setMessage({ type: "", text: "" });
 
     if (password !== confirmPassword) {
-      setMessage({
-        type: "error",
-        text: "Passwords do not match",
-      });
+      setMessage({ type: "error", text: "Passwords do not match" });
       return;
     }
 
-    try {
-      setPending(true);
-      // Better Auth Signup 
-      await authClient.signUp.email({
-        name,
+    const { data, error } = await authClient.signUp.email(
+      {
         email,
         password,
+        name,
         image: image || undefined,
-      },{
-         onSuccess: (ctx) => {
-            redirect('/signin')
+      },
+      {
+        onRequest: () => {
+          setPending(true);
         },
-      });
-      await new Promise((resolve) =>
-        setTimeout(resolve, 2000)
-      );
-      setMessage({
-        type: "success",
-        text: "Account created successfully!",
-      });
-      e.target.reset();
-    } catch (error) {
-      setMessage({
-        type: "error",
-        text:error.message ||"Failed to create account",
-      });
-    } finally {
-      setPending(false);
-    }
+        onSuccess: (ctx) => {
+          setPending(false);
+          setMessage({
+            type: "success",
+            text: "Account created successfully!",
+          });
+          e.target.reset();
+          // router.push('/signin')
+        },
+        onError: (ctx) => {
+          console.error(ctx.error)
+          setPending(false);
+          setMessage({
+            type: "error",
+            text: ctx.error.message || "Failed to create account",
+          });
+        },
+      },
+    );
+    console.log("data",data.user)
+    console.log("error",error)
   };
 
   // const handleGoogleLogin = async () => {
@@ -103,19 +96,14 @@ export default function SignupPage() {
     <main className="flex min-h-screen items-center justify-center bg-black px-4 py-10">
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-white">
-            Create Account
-          </h1>
+          <h1 className="text-3xl font-bold text-white">Create Account</h1>
 
           <p className="mt-2 text-gray-400">
             Join HireLoop and start your journey.
           </p>
         </div>
 
-        <Form
-          className="w-full"
-          onSubmit={handleSignup}
-        >
+        <Form className="w-full" onSubmit={handleSignup}>
           <Fieldset className="w-full">
             <FieldGroup>
               {/* Name */}
@@ -147,11 +135,7 @@ export default function SignupPage() {
 
               {/* Email */}
 
-              <TextField
-                isRequired
-                name="email"
-                type="email"
-              >
+              <TextField isRequired name="email" type="email">
                 <Label>Email</Label>
 
                 <InputGroup>
@@ -182,9 +166,7 @@ export default function SignupPage() {
                   <InputGroup.Suffix />
                 </InputGroup>
 
-                <Description>
-                  Optional
-                </Description>
+                <Description>Optional</Description>
 
                 <FieldError />
               </TextField>
@@ -209,48 +191,29 @@ export default function SignupPage() {
                   </InputGroup.Prefix>
 
                   <InputGroup.Input
-                    type={
-                      showPassword
-                        ? "text"
-                        : "password"
-                    }
+                    type={showPassword ? "text" : "password"}
                     placeholder="********"
                   />
 
                   <InputGroup.Suffix>
                     <button
                       type="button"
-                      onClick={() =>
-                        setShowPassword(
-                          !showPassword
-                        )
-                      }
+                      onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? (
-                        <FaEyeSlash />
-                      ) : (
-                        <FaEye />
-                      )}
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </InputGroup.Suffix>
                 </InputGroup>
 
-                <Description>
-                  Minimum 8 characters
-                </Description>
+                <Description>Minimum 8 characters</Description>
 
                 <FieldError />
               </TextField>
 
               {/* Confirm Password */}
 
-              <TextField
-                isRequired
-                name="confirmPassword"
-              >
-                <Label>
-                  Confirm Password
-                </Label>
+              <TextField isRequired name="confirmPassword">
+                <Label>Confirm Password</Label>
 
                 <InputGroup>
                   <InputGroup.Prefix>
@@ -258,11 +221,7 @@ export default function SignupPage() {
                   </InputGroup.Prefix>
 
                   <InputGroup.Input
-                    type={
-                      showConfirmPassword
-                        ? "text"
-                        : "password"
-                    }
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="********"
                   />
 
@@ -270,16 +229,10 @@ export default function SignupPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        setShowConfirmPassword(
-                          !showConfirmPassword
-                        )
+                        setShowConfirmPassword(!showConfirmPassword)
                       }
                     >
-                      {showConfirmPassword ? (
-                        <FaEyeSlash />
-                      ) : (
-                        <FaEye />
-                      )}
+                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </InputGroup.Suffix>
                 </InputGroup>
@@ -291,7 +244,9 @@ export default function SignupPage() {
             {message.text && (
               <div
                 className={`mt-4 rounded-xl p-3 text-sm ${
-                  message.type === "success"? "bg-green-500/20 text-green-400": "bg-red-500/20 text-red-400"
+                  message.type === "success"
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-red-500/20 text-red-400"
                 }`}
               >
                 {message.text}
@@ -319,9 +274,7 @@ export default function SignupPage() {
 
         <div className="my-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-white/10" />
-          <span className="text-xs text-gray-500">
-            OR
-          </span>
+          <span className="text-xs text-gray-500">OR</span>
           <div className="h-px flex-1 bg-white/10" />
         </div>
 
@@ -336,10 +289,7 @@ export default function SignupPage() {
 
         <p className="mt-6 text-center text-sm text-gray-400">
           Already have an account?{" "}
-          <Link
-            href="/signin"
-            className="font-medium text-[#5C53FE]"
-          >
+          <Link href="/signin" className="font-medium text-[#5C53FE]">
             Sign In
           </Link>
         </p>

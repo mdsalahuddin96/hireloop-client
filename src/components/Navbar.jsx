@@ -2,14 +2,20 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@heroui/react";
+import { Avatar, Button } from "@heroui/react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import { PiBriefcaseBold } from "react-icons/pi";
+import { signOut, useSession } from "@/lib/auth-client";
+import { router } from "better-auth/api";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter();
+  const { data } = useSession();
+  const user = data?.user;
+  console.log(user)
   const navItems = [
     {
       label: "Browse Jobs",
@@ -24,7 +30,11 @@ export default function Navbar() {
       href: "/pricing",
     },
   ];
-
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/signin");
+    router.refresh();
+  };
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0D1117]/80 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
@@ -57,21 +67,34 @@ export default function Navbar() {
           <div className="mx-3 h-5 w-px bg-white/20" />
 
           {/* Desktop Actions */}
-          <div className="hidden items-center gap-5 lg:flex ml-4">
-            <Link
-              href="/login"
-              className="font-medium text-violet-400 hover:text-violet-300"
-            >
-              Sign In
-            </Link>
-
-            <Button
-              href="/register"
-              className="bg-white font-semibold text-black"
-            >
-              Get Started
-            </Button>
-          </div>
+          {user ? (
+            <div className="hidden items-center gap-5 lg:flex ml-4">
+              <Avatar>
+                <Avatar.Image alt={user?.name} src={user?.image} />
+                <Avatar.Fallback className="text-lg font-bold">
+                  {user?.name.charAt(0).toUpperCase()}
+                </Avatar.Fallback>
+              </Avatar>
+              <Button variant="danger" onClick={handleSignOut}>
+                Sign Out
+              </Button>
+            </div>
+          ) : (
+            <div className="hidden items-center gap-5 lg:flex ml-4">
+              <Link
+                href="/signin"
+                className="font-medium text-violet-400 hover:text-violet-300"
+              >
+                Sign In
+              </Link>
+              <Button
+                href="/register"
+                className="bg-white font-semibold text-black"
+              >
+                Get Started
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -98,18 +121,32 @@ export default function Navbar() {
               </Link>
             ))}
 
-            <div className="flex flex-col gap-3 pt-3">
-              <Link
-                href="/login"
-                className="font-medium text-violet-400 hover:text-violet-300"
-              >
-                Sign In
-              </Link>
+            {user ? (
+              <div className="flex items-center gap-3 pt-3">
+                <Avatar>
+                  <Avatar.Image alt={user?.name} src={user?.image} />
+                  <Avatar.Fallback className="text-lg font-bold">
+                    {user?.name.charAt(0).toUpperCase()}
+                  </Avatar.Fallback>
+                </Avatar>
+                <Button variant="danger" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 pt-3">
+                <Link
+                  href="/signin"
+                  className="font-medium text-violet-400 hover:text-violet-300"
+                >
+                  Sign In
+                </Link>
 
-              <Button href="/register" color="primary">
-                Get Started
-              </Button>
-            </div>
+                <Button href="/register" color="primary">
+                  Get Started
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
