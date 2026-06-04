@@ -15,136 +15,109 @@ import {
   InputGroup,
 } from "@heroui/react";
 
+import { MdEmail } from "react-icons/md";
+
 import {
-  FaUser,
   FaLock,
   FaEye,
   FaEyeSlash,
-  FaImage,
 } from "react-icons/fa";
 
-import { MdEmail } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { ImSpinner8 } from "react-icons/im";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
 
-export default function SignupPage() {
+export default function SigninPage() {
   const [pending, setPending] = useState(false);
-  const [showPassword, setShowPassword]=useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =useState(false);
+
+  const [showPassword, setShowPassword] =
+    useState(false);
+
   const [message, setMessage] = useState({
     type: "",
     text: "",
   });
 
-  const handleSignup = async (e) => {
+  const handleSignin = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const userData=Object.fromEntries(formData.entries())
-    const {name,email,image,password,confirmPassword}=userData;
+
     setMessage({
       type: "",
       text: "",
     });
 
-    if (password !== confirmPassword) {
-      setMessage({
-        type: "error",
-        text: "Passwords do not match",
-      });
-      return;
-    }
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
 
     try {
       setPending(true);
-      // Better Auth Signup 
-      await authClient.signUp.email({
-        name,
-        email,
-        password,
-        image: image || undefined,
-      },{
-         onSuccess: (ctx) => {
-            redirect('/signin')
-        },
-      });
-      await new Promise((resolve) =>
-        setTimeout(resolve, 2000)
-      );
+      const {data,error} = await authClient.signIn.email({
+          email,
+          password,
+          callbackURL:'/'
+        });
+
+      if (error) {
+        setMessage({
+          type: "error",
+          text:result.error.message ||"Invalid email or password",
+        });
+        return;
+      }
+
       setMessage({
         type: "success",
-        text: "Account created successfully!",
+        text: "Login successful!",
       });
-      e.target.reset();
     } catch (error) {
       setMessage({
         type: "error",
-        text:error.message ||"Failed to create account",
+        text:
+          error?.message ||
+          "Failed to sign in",
       });
     } finally {
       setPending(false);
     }
   };
 
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     /*
-  //     await authClient.signIn.social({
-  //       provider: "google",
-  //     });
-  //     */
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+//   const handleGoogleLogin = async () => {
+//     try {
+//       await authClient.signIn.social({
+//         provider: "google",
+//       });
+//     } catch (error) {
+//       setMessage({
+//         type: "error",
+//         text:
+//           error?.message ||
+//           "Google login failed",
+//       });
+//     }
+//   };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-black px-4 py-10">
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+        {/* Header */}
+
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-white">
-            Create Account
+            Welcome Back
           </h1>
 
           <p className="mt-2 text-gray-400">
-            Join HireLoop and start your journey.
+            Sign in to your HireLoop account.
           </p>
         </div>
 
         <Form
           className="w-full"
-          onSubmit={handleSignup}
+          onSubmit={handleSignin}
         >
           <Fieldset className="w-full">
             <FieldGroup>
-              {/* Name */}
-
-              <TextField
-                isRequired
-                name="name"
-                validate={(value) => {
-                  if (value.length < 3) {
-                    return "Name must be at least 3 characters";
-                  }
-                  return null;
-                }}
-              >
-                <Label>Name</Label>
-
-                <InputGroup>
-                  <InputGroup.Prefix>
-                    <FaUser size={18} />
-                  </InputGroup.Prefix>
-
-                  <InputGroup.Input placeholder="John Doe" />
-
-                  <InputGroup.Suffix />
-                </InputGroup>
-
-                <FieldError />
-              </TextField>
-
               {/* Email */}
 
               <TextField
@@ -167,28 +140,6 @@ export default function SignupPage() {
                 <FieldError />
               </TextField>
 
-              {/* Image */}
-
-              <TextField name="image">
-                <Label>Profile Image URL</Label>
-
-                <InputGroup>
-                  <InputGroup.Prefix>
-                    <FaImage size={18} />
-                  </InputGroup.Prefix>
-
-                  <InputGroup.Input placeholder="https://example.com/profile.jpg" />
-
-                  <InputGroup.Suffix />
-                </InputGroup>
-
-                <Description>
-                  Optional
-                </Description>
-
-                <FieldError />
-              </TextField>
-
               {/* Password */}
 
               <TextField
@@ -198,6 +149,7 @@ export default function SignupPage() {
                   if (value.length < 8) {
                     return "Password must be at least 8 characters";
                   }
+
                   return null;
                 }}
               >
@@ -236,67 +188,29 @@ export default function SignupPage() {
                 </InputGroup>
 
                 <Description>
-                  Minimum 8 characters
+                  Enter your password
                 </Description>
-
-                <FieldError />
-              </TextField>
-
-              {/* Confirm Password */}
-
-              <TextField
-                isRequired
-                name="confirmPassword"
-              >
-                <Label>
-                  Confirm Password
-                </Label>
-
-                <InputGroup>
-                  <InputGroup.Prefix>
-                    <FaLock size={18} />
-                  </InputGroup.Prefix>
-
-                  <InputGroup.Input
-                    type={
-                      showConfirmPassword
-                        ? "text"
-                        : "password"
-                    }
-                    placeholder="********"
-                  />
-
-                  <InputGroup.Suffix>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(
-                          !showConfirmPassword
-                        )
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <FaEyeSlash />
-                      ) : (
-                        <FaEye />
-                      )}
-                    </button>
-                  </InputGroup.Suffix>
-                </InputGroup>
 
                 <FieldError />
               </TextField>
             </FieldGroup>
 
+            {/* Message */}
+
             {message.text && (
               <div
                 className={`mt-4 rounded-xl p-3 text-sm ${
-                  message.type === "success"? "bg-green-500/20 text-green-400": "bg-red-500/20 text-red-400"
+                  message.type ===
+                  "success"
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-red-500/20 text-red-400"
                 }`}
               >
                 {message.text}
               </div>
             )}
+
+            {/* Submit */}
 
             <Fieldset.Actions className="mt-6 w-full">
               <Button
@@ -307,15 +221,17 @@ export default function SignupPage() {
                 {pending ? (
                   <>
                     <ImSpinner8 className="animate-spin" />
-                    Creating Account...
+                    Signing In...
                   </>
                 ) : (
-                  "Sign Up"
+                  "Sign In"
                 )}
               </Button>
             </Fieldset.Actions>
           </Fieldset>
         </Form>
+
+        {/* Divider */}
 
         <div className="my-6 flex items-center gap-3">
           <div className="h-px flex-1 bg-white/10" />
@@ -325,22 +241,36 @@ export default function SignupPage() {
           <div className="h-px flex-1 bg-white/10" />
         </div>
 
+        {/* Google Login */}
+
         <Button
           variant="bordered"
           className="w-full"
-          // onPress={handleGoogleLogin}
+        //   onPress={handleGoogleLogin}
+          isDisabled={pending}
         >
           <FcGoogle size={20} />
           Continue with Google
         </Button>
 
-        <p className="mt-6 text-center text-sm text-gray-400">
-          Already have an account?{" "}
+        {/* Footer Links */}
+
+        <div className="mt-6 text-center">
           <Link
-            href="/signin"
+            href="/forgot-password"
+            className="text-sm text-[#5C53FE] hover:underline"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
+        <p className="mt-4 text-center text-sm text-gray-400">
+          Don&apost have an account?{" "}
+          <Link
+            href="/signup"
             className="font-medium text-[#5C53FE]"
           >
-            Sign In
+            Sign Up
           </Link>
         </p>
       </div>
