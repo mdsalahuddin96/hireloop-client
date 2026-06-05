@@ -13,6 +13,8 @@ import {
   Description,
   Button,
   InputGroup,
+  Radio,
+  RadioGroup,
 } from "@heroui/react";
 
 import { FaUser, FaLock, FaEye, FaEyeSlash, FaImage } from "react-icons/fa";
@@ -37,7 +39,7 @@ export default function SignupPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const userData = Object.fromEntries(formData.entries());
-    const { name, email, image, password, confirmPassword } = userData;
+    const { name, email, image, password, confirmPassword,role } = userData;
 
     setMessage({ type: "", text: "" });
 
@@ -52,6 +54,7 @@ export default function SignupPage() {
         password,
         name,
         image: image || undefined,
+        role,
       },
       {
         onRequest: () => {
@@ -64,10 +67,10 @@ export default function SignupPage() {
             text: "Account created successfully!",
           });
           e.target.reset();
-          // router.push('/signin')
+          router.push("/signin");
         },
         onError: (ctx) => {
-          console.error(ctx.error)
+          console.error(ctx.error);
           setPending(false);
           setMessage({
             type: "error",
@@ -76,8 +79,6 @@ export default function SignupPage() {
         },
       },
     );
-    console.log("data",data.user)
-    console.log("error",error)
   };
 
   // const handleGoogleLogin = async () => {
@@ -239,6 +240,31 @@ export default function SignupPage() {
 
                 <FieldError />
               </TextField>
+              <div className="flex flex-col gap-4">
+                <Label>Role</Label>
+                <RadioGroup
+                  defaultValue="seeker"
+                  name="role"
+                  orientation="horizontal"
+                >
+                  <Radio value="seeker">
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <Radio.Content>
+                      <Label>Job Seeker</Label>
+                    </Radio.Content>
+                  </Radio>
+                  <Radio value="recruiter">
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <Radio.Content>
+                      <Label>Recruiter </Label>
+                    </Radio.Content>
+                  </Radio>
+                </RadioGroup>
+              </div>
             </FieldGroup>
 
             {message.text && (

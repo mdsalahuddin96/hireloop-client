@@ -15,7 +15,6 @@ export default function Navbar() {
   const router = useRouter();
   const { data } = useSession();
   const user = data?.user;
-  console.log(user)
   const navItems = [
     {
       label: "Browse Jobs",
