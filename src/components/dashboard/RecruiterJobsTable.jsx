@@ -1,8 +1,9 @@
 "use client";
 
-import { Table, Button, Badge } from "@heroui/react";
-import { FaEdit, FaUsers, FaTrash } from "react-icons/fa";
-import { MdOutlineRestartAlt } from "react-icons/md";
+import { Eye } from "@gravity-ui/icons";
+import { Table, Button } from "@heroui/react";
+import { FaEdit, FaTrash } from "react-icons/fa";
+
 
 const jobs = [
   {
@@ -28,7 +29,7 @@ const jobs = [
   },
 ];
 
-export default function RecruiterJobsTable({jobs}) {
+export default function RecruiterJobsTable({ jobs }) {
   const getStatusBadge = (status) => {
     if (status === "active") {
       return (
@@ -80,7 +81,7 @@ export default function RecruiterJobsTable({jobs}) {
 
                   <Table.Cell>{getStatusBadge(job?.status)}</Table.Cell>
 
-                  <Table.Cell>{job?.applicants||0}</Table.Cell>
+                  <Table.Cell>{job?.applicants || 0}</Table.Cell>
 
                   <Table.Cell>{job.deadline}</Table.Cell>
 
@@ -88,29 +89,13 @@ export default function RecruiterJobsTable({jobs}) {
                     <div className="flex flex-wrap gap-2">
                       <Button size="sm" variant="flat">
                         <FaEdit />
-                        Edit
                       </Button>
 
                       <Button size="sm" variant="flat">
-                        <FaUsers />
-                        Applicants
+                        <Eye />
                       </Button>
-
-                      {job.status === "Active" ? (
-                        <Button size="sm" variant="flat" color="warning">
-                          <MdOutlineRestartAlt />
-                          Close
-                        </Button>
-                      ) : (
-                        <Button size="sm" variant="flat" color="success">
-                          <MdOutlineRestartAlt />
-                          Reopen
-                        </Button>
-                      )}
-
-                      <Button size="sm" variant="flat" color="danger">
-                        <FaTrash />
-                        Delete
+                      <Button size="sm" variant="flat" >
+                        <FaTrash color="red"/>
                       </Button>
                     </div>
                   </Table.Cell>
