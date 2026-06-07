@@ -61,7 +61,7 @@ export default function SigninPage() {
       if (error) {
         setMessage({
           type: "error",
-          text:result.error.message ||"Invalid email or password",
+          text:error.message ||"Invalid email or password",
         });
         return;
       }

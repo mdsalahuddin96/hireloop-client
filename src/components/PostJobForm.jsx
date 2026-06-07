@@ -13,6 +13,7 @@ import {
   ListBox,
   InputGroup,
   toast,
+  Avatar,
 } from "@heroui/react";
 
 import { FaBuilding } from "react-icons/fa";
@@ -20,26 +21,26 @@ import { FaBuilding } from "react-icons/fa";
 import { useState } from "react";
 import { newJobPost } from "@/lib/actions/jobs";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
-export default function PostJobForm({company}) {
+export default function PostJobForm({ company }) {
+  console.log(company);
   const [isRemote, setIsRemote] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData(e.currentTarget);
-
     const jobData = Object.fromEntries(formData.entries());
-    jobData.remote=isRemote;
-    jobData.status="active";
-    jobData.companyId="company_123"
-    const res=await newJobPost(jobData);
-    if(res.insertedId){
-        toast.success("Job Post Successfully")
-       e.target.reset()
-        redirect("/dashboard/recruiter")
+    jobData.remote = isRemote;
+    jobData.status = "active";
+    jobData.companyId = company._id;
+    jobData.companyName = company.name;
+    jobData.companyLogo = company.logo;
+    const res = await newJobPost(jobData);
+    if (res.insertedId) {
+      toast.success("Job Post Successfully");
+      e.target.reset();
+      redirect("/dashboard/recruiter");
     }
-    
   };
 
   return (
@@ -311,12 +312,20 @@ export default function PostJobForm({company}) {
 
             <div className="rounded-xl bg-content2 p-5">
               <div className="flex items-center gap-3">
-                <FaBuilding />
+                <Image
+                src={company?.logo}
+                alt={company?.name}
+                height={400}
+                width={400}
+                className="h-20 w-20"
+                >
+
+                </Image>
 
                 <div>
-                  <h3 className="font-semibold">TechNova Ltd.</h3>
+                  <h3 className="font-semibold">{company.name}</h3>
 
-                  <p className="text-sm text-default-500">Approved Company</p>
+                  <p className="text-sm text-default-500">{company.status}</p>
                 </div>
               </div>
             </div>

@@ -39,7 +39,7 @@ export default function SignupPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const userData = Object.fromEntries(formData.entries());
-    const { name, email, image, password, confirmPassword,role } = userData;
+    const { name, email, image, password, confirmPassword, role } = userData;
 
     setMessage({ type: "", text: "" });
 
@@ -69,16 +69,12 @@ export default function SignupPage() {
           e.target.reset();
           router.push("/signin");
         },
-        onError: (ctx) => {
-          console.error(ctx.error);
-          setPending(false);
-          setMessage({
-            type: "error",
-            text: ctx.error.message || "Failed to create account",
-          });
-        },
       },
     );
+    if(error){
+      console.log(error.message)
+    }
+    setPending(false)
   };
 
   // const handleGoogleLogin = async () => {
