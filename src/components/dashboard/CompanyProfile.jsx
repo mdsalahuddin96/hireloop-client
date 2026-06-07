@@ -27,8 +27,9 @@ import {
 import { FiEdit } from "react-icons/fi";
 import { BsUpload } from "react-icons/bs";
 import { createCompany } from "@/lib/actions/company";
+import Image from "next/image";
 
-export default function CompanyProfile({recruiter,recruiterCompany}) {
+export default function CompanyProfile({ recruiter, recruiterCompany }) {
   const [company, setCompany] = useState(recruiterCompany);
 
   // ২. ইউজার ইন্টারফেস স্টেটসমূহ
@@ -85,7 +86,7 @@ export default function CompanyProfile({recruiter,recruiterCompany}) {
         company?.logo ||
         "https://images.unsplash.com/photo-1560179707-f14e90ef3623",
       status: company?.status || "Pending", // নতুন হলে ডিফোল্ট Pending থাকবে
-      recruiterId:recruiter?.id
+      recruiterId: recruiter?.id,
     };
     setIsSubmitting(true);
 
@@ -140,10 +141,13 @@ export default function CompanyProfile({recruiter,recruiterCompany}) {
         <div className="border border-white/10 bg-[#161b22]/70 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-white/10">
             <div className="flex items-center gap-4">
-              <Avatar className="w-20 h-20 text-large rounded-2xl border border-white/10 object-cover bg-white/5">
-                <Avatar.Image alt="Company logo" src={company.logo} />
-              </Avatar>
-
+              <Image
+                src={company?.logo}
+                alt={company?.name}
+                height={200}
+                width={200}
+                className="w-20 h-20 text-large rounded-2xl border border-white/10 object-cover bg-white/5"
+              />
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-2xl font-bold">{company.name}</h1>

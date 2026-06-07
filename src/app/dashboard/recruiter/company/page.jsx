@@ -7,7 +7,7 @@ import { getUserSession } from '@/lib/core/session';
 const CompanyPage =async () => {
   const user=await getUserSession()
   const company=await getRecruiterCompany(user?.id)
- 
+  console.log(company)
   return (
     <div>
       <CompanyProfile recruiter={user} recruiterCompany={company}/>

@@ -93,14 +93,6 @@ export default function Footer() {
                 </Link>
               </li>
 
-              <li>
-                <Link
-                  href="/dashboard"
-                  className="text-gray-400 transition hover:text-white"
-                >
-                  Recruiter Dashboard
-                </Link>
-              </li>
             </ul>
           </div>
 
