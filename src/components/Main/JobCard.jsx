@@ -8,16 +8,16 @@ export default function JobCard({ job }) {
   const router = useRouter();
 
   return (
-    <Card className="w-full rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition">
+    <Card className="w-full rounded-2xl border border-gray-500 shadow-sm hover:shadow-md transition">
       
       {/* HEADER */}
       <Card.Header className="flex items-start justify-between gap-3">
         <div>
-          <Card.Title className="text-lg font-semibold text-gray-900">
+          <Card.Title className="text-lg font-semibold">
             {job.title}
           </Card.Title>
 
-          <Card.Description className="text-sm text-gray-500">
+          <Card.Description className="text-sm text-gray-400">
             {job.companyName} • {job.city}, {job.country}
           </Card.Description>
         </div>
@@ -36,11 +36,11 @@ export default function JobCard({ job }) {
         
         {/* Category + Job Type */}
         <div className="flex flex-wrap gap-2 text-xs">
-          <span className="px-2 py-1 bg-gray-100 rounded-full">
-            {job.category}
+          <span className="px-2 py-1 bg-gray-700 rounded-full">
+            {job.category.charAt(0).toUpperCase()+job.category.slice(1)}
           </span>
           <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
-            {job.jobType}
+            {job.jobType.charAt(0).toUpperCase()+job.jobType.slice(1)}
           </span>
           {job.remote && (
             <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full">
@@ -50,12 +50,12 @@ export default function JobCard({ job }) {
         </div>
 
         {/* Salary */}
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-gray-400">
           💰 {job.salaryMin} - {job.salaryMax} {job.currency.toUpperCase()}
         </p>
 
         {/* Requirements */}
-        <p className="text-sm text-gray-600 line-clamp-2">
+        <p className="text-sm text-gray-400 line-clamp-2">
           {job.requirements}
         </p>
       </Card.Content>
