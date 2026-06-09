@@ -1,7 +1,9 @@
 "use client";
 
+import { ArrowRight } from "@gravity-ui/icons";
 import { Card } from "@heroui/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function JobCard({ job }) {
@@ -9,13 +11,10 @@ export default function JobCard({ job }) {
 
   return (
     <Card className="w-full rounded-2xl border border-gray-500 shadow-sm hover:shadow-md transition">
-      
       {/* HEADER */}
       <Card.Header className="flex items-start justify-between gap-3">
         <div>
-          <Card.Title className="text-lg font-semibold">
-            {job.title}
-          </Card.Title>
+          <Card.Title className="text-lg font-semibold">{job.title}</Card.Title>
 
           <Card.Description className="text-sm text-gray-400">
             {job.companyName} • {job.city}, {job.country}
@@ -33,14 +32,13 @@ export default function JobCard({ job }) {
 
       {/* CONTENT */}
       <Card.Content className="space-y-3">
-        
         {/* Category + Job Type */}
         <div className="flex flex-wrap gap-2 text-xs">
           <span className="px-2 py-1 bg-gray-700 rounded-full">
-            {job.category.charAt(0).toUpperCase()+job.category.slice(1)}
+            {job.category.charAt(0).toUpperCase() + job.category.slice(1)}
           </span>
           <span className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
-            {job.jobType.charAt(0).toUpperCase()+job.jobType.slice(1)}
+            {job.jobType.charAt(0).toUpperCase() + job.jobType.slice(1)}
           </span>
           {job.remote && (
             <span className="px-2 py-1 bg-green-100 text-green-600 rounded-full">
@@ -55,24 +53,19 @@ export default function JobCard({ job }) {
         </p>
 
         {/* Requirements */}
-        <p className="text-sm text-gray-400 line-clamp-2">
-          {job.requirements}
-        </p>
+        <p className="text-sm text-gray-400 line-clamp-2">{job.requirements}</p>
       </Card.Content>
 
       {/* FOOTER */}
       <Card.Footer className="flex items-center justify-between">
-        
-        <p className="text-xs text-gray-400">
-          Deadline: {job.deadline}
-        </p>
+        <p className="text-xs text-gray-400">Deadline: {job.deadline}</p>
 
-        <button
-          onClick={() => router.push(`/jobs/${job._id || job.id}`)}
-          className="px-4 py-2 text-sm bg-black text-white rounded-lg hover:bg-gray-800 transition"
+        <Link
+          href={`/jobs/${job._id}`}
+          className="flex gap-2 items-center  py-2 text-sm text-white hover:text-gray-900 hover:border hover:border-gray-900 cursor-pointer "
         >
-          View Details
-        </button>
+          Apply Now <ArrowRight />
+        </Link>
       </Card.Footer>
     </Card>
   );

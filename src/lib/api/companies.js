@@ -19,3 +19,10 @@ export const getAllJobs=async(searchParams)=>{
     return jobs;
 }
 
+export const getJobsById=async(id)=>{
+    if(!id){
+        return null;
+    }
+    const job=await serverFetch(`/jobs/${id}`)
+    return job;
+}
