@@ -12,7 +12,10 @@ export const getLoggedInRecruiterCompany=async()=>{
     return getRecruiterCompany(user?.id)
 }
 
-export const getAllJobs=async()=>{
-    const jobs=await serverFetch("/api/alljobs")
+export const getAllJobs=async(searchParams)=>{
+    const queryString = new URLSearchParams(searchParams).toString();
+    const url=queryString?`/api/jobs?${queryString}`:"/api/jobs"
+    const jobs=await serverFetch(url);
     return jobs;
 }
+
