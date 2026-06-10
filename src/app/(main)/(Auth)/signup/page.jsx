@@ -23,10 +23,12 @@ import { MdEmail } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { ImSpinner8 } from "react-icons/im";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams=useSearchParams();
+  const redirectTo=searchParams.get("callbackURL")
   const [pending, setPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -67,7 +69,7 @@ export default function SignupPage() {
             text: "Account created successfully!",
           });
           e.target.reset();
-          router.push("/signin");
+          router.push(redirectTo?`/signin?callbackURL=${redirectTo}`:"/signin");
         },
       },
     );
@@ -311,7 +313,7 @@ export default function SignupPage() {
 
         <p className="mt-6 text-center text-sm text-gray-400">
           Already have an account?{" "}
-          <Link href="/signin" className="font-medium text-[#5C53FE]">
+          <Link href={redirectTo?`/signin?callbackURL=${redirectTo}`:"/signin"} className="font-medium text-[#5C53FE]">
             Sign In
           </Link>
         </p>

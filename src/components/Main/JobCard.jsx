@@ -62,7 +62,7 @@ export default function JobCard({ job }) {
 
         <Link
           href={`/jobs/${job._id}`}
-          className="flex gap-2 items-center  py-2 text-sm text-white hover:text-gray-900 hover:border hover:border-gray-900 cursor-pointer "
+          className="flex gap-2 items-center px-4 rounded-2xl py-2 text-sm text-white hover:text-gray-300 hover:border hover:border-gray-500 cursor-pointer transition-all "
         >
           Apply Now <ArrowRight />
         </Link>

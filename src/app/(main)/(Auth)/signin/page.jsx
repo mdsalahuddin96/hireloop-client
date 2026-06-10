@@ -26,8 +26,11 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { ImSpinner8 } from "react-icons/im";
 import { authClient } from "@/lib/auth-client";
+import { useSearchParams } from "next/navigation";
 
 export default function SigninPage() {
+  const searchParams=useSearchParams()
+  const callbackURL=searchParams.get("callbackURL")||"/";
   const [pending, setPending] = useState(false);
 
   const [showPassword, setShowPassword] =
@@ -55,7 +58,7 @@ export default function SigninPage() {
       const {data,error} = await authClient.signIn.email({
           email,
           password,
-          callbackURL:'/'
+          callbackURL:callbackURL
         });
 
       if (error) {
@@ -65,11 +68,12 @@ export default function SigninPage() {
         });
         return;
       }
-
+      
       setMessage({
         type: "success",
         text: "Login successful!",
       });
+      // redirect(callbackURL)
     } catch (error) {
       setMessage({
         type: "error",
@@ -267,7 +271,7 @@ export default function SigninPage() {
         <p className="mt-4 text-center text-sm text-gray-400">
           Don&apost have an account?{" "}
           <Link
-            href="/signup"
+            href={callbackURL!=="/"?`/signup?callbackURL=${callbackURL}`:'/signup'}
             className="font-medium text-[#5C53FE]"
           >
             Sign Up
