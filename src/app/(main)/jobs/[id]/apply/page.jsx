@@ -1,6 +1,7 @@
 import ApplicationForm from "@/components/Main/ApplicationForm";
 import { getApplications } from "@/lib/api/applications";
 import { getJobsById } from "@/lib/api/companies";
+import { getPlanById } from "@/lib/api/plan";
 import { getUserSession } from "@/lib/core/session";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -26,10 +27,7 @@ const ApplyPage = async ({ params }) => {
       </div>
     );
   }
-  const plan={
-    name:"free",
-    maxApplication:3
-  }
+  const plan=await getPlanById(user?.plan||"seeker_free")
   if (applications.length >= plan.maxApplication) {
     return (
       <div className="mx-auto max-w-md rounded-3xl border bg-content1 p-8 text-center my-10">
@@ -56,7 +54,7 @@ const ApplyPage = async ({ params }) => {
     <div className="container mx-auto px-4 py-10">
       <div className="mx-auto max-w-3xl rounded-3xl border bg-content1 p-6 md:p-8">
         <div className="border px-2 w-40 text-center py-1.5 rounded-full bg-white/5 backdrop-blur-2xl">
-          <span>Applied {applications.length} out of 3</span>
+          <span>Applied {applications.length} out of {plan.maxApplication}</span>
         </div>
         <ApplicationForm job={job} user={user} />
       </div>

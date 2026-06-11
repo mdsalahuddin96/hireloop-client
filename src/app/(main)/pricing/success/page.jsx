@@ -2,6 +2,9 @@ import { stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { FaCheckCircle, FaArrowRight } from "react-icons/fa";
+import { createSubscription } from "@/lib/actions/subscription";
+import { metadata } from "@/app/layout";
+import { email } from "better-auth";
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -13,6 +16,7 @@ export default async function Success({ searchParams }) {
   const {
     status,
     customer_details: { email: customerEmail },
+    metadata
   } = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ["line_items", "payment_intent"],
   });
@@ -22,6 +26,12 @@ export default async function Success({ searchParams }) {
   }
 
   if (status === "complete") {
+    const subscriptionInfo = {
+      planId: metadata.planId,
+      email: customerEmail,
+    };
+    const result = await createSubscription(subscriptionInfo);
+    console.log(result);
     return (
       <div className="container mx-auto flex min-h-[80vh] items-center justify-center px-4 py-10">
         <div className="w-full max-w-2xl rounded-3xl border border-green-500/20 bg-content1 p-8 text-center shadow-xl md:p-12">
@@ -54,9 +64,7 @@ export default async function Success({ searchParams }) {
 
           {/* Message */}
           <div className="mt-8 space-y-3 text-default-600">
-            <p>
-              Your subscription has been activated successfully.
-            </p>
+            <p>Your subscription has been activated successfully.</p>
 
             <p>
               You can now access all premium features included in your plan.

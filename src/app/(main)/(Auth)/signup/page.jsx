@@ -42,7 +42,7 @@ export default function SignupPage() {
     const formData = new FormData(e.currentTarget);
     const userData = Object.fromEntries(formData.entries());
     const { name, email, image, password, confirmPassword, role } = userData;
-
+    const plan= role==="seeker"?"seeker_free":"recruiter_free";
     setMessage({ type: "", text: "" });
 
     if (password !== confirmPassword) {
@@ -57,6 +57,7 @@ export default function SignupPage() {
         name,
         image: image || undefined,
         role,
+        plan
       },
       {
         onRequest: () => {
