@@ -98,7 +98,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
       setIsOpen(false);
     }
   };
-  console.log(company);
+  // console.log(company);
 
   // ৫. এডিট মোড ওপেন করার সময় এক্সিস্টিং লোগো সেট করা
   const openEditModal = () => {

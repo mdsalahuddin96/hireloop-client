@@ -1,20 +1,22 @@
+import { getUserSession } from "@/lib/core/session";
 import {
   LayoutSideContentLeft,
-  Bell,
   Envelope,
   Gear,
   House,
-  Magnifier,
   Person,
   Briefcase,
+  Bookmark,
 } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 import Link from "next/link";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
+import { FaFileAlt } from "react-icons/fa";
 import { GoBriefcase } from "react-icons/go";
 
-export function DashboardSidebar() {
-  const navItems = [
+export async function DashboardSidebar() {
+  const user=await getUserSession()
+  const recruiterNavItems = [
     { icon: House, href:"/dashboard/recruiter", label: "Home" },
     { icon: Briefcase, href:"/dashboard/recruiter/jobs", label: "Jobs" },
     { icon: BsFileEarmarkPostFill , href:"/dashboard/recruiter/jobs/new", label: "Post a Job" },
@@ -23,6 +25,20 @@ export function DashboardSidebar() {
     { icon: Person, label: "Profile" },
     { icon: Gear, label: "Settings" },
   ];
+  const seekerNavItems = [
+  { icon: House, href: "/dashboard/seeker", label: "Home" },
+  { icon: Briefcase, href: "/dashboard/seeker/applications", label: "My Applications" },
+  { icon: Bookmark, href: "/dashboard/seeker/saved-jobs", label: "Saved Jobs" },
+  { icon: FaFileAlt, href: "/dashboard/seeker/resume", label: "Resume" },
+  { icon: Envelope, href: "/dashboard/seeker/messages", label: "Messages" },
+  { icon: Person, href: "/dashboard/seeker/profile", label: "Profile" },
+  { icon: Gear, href: "/dashboard/seeker/settings", label: "Settings" },
+];
+const role={
+  seeker:seekerNavItems,
+  recruiter:recruiterNavItems
+}
+  const navItems=role[user?.role]
   const navContent = (
     <nav className="flex flex-col gap-1">
       {navItems.map((item) => (

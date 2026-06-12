@@ -32,9 +32,9 @@ export default function PostJobForm({ company }) {
     const jobData = Object.fromEntries(formData.entries());
     jobData.remote = isRemote;
     jobData.status = "active";
-    jobData.companyId = company._id;
-    jobData.companyName = company.name;
-    jobData.companyLogo = company.logo;
+    jobData.companyId = company?._id;
+    jobData.companyName = company?.name;
+    jobData.companyLogo = company?.logo;
     const res = await newJobPost(jobData);
     if (res.insertedId) {
       toast.success("Job Post Successfully");

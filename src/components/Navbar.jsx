@@ -29,6 +29,17 @@ export default function Navbar() {
       href: "/pricing",
     },
   ];
+
+  const userRole={
+    seeker:"/dashboard/seeker",
+    recruiter:"/dashboard/recruiter"
+  }
+  if(user?.email){
+    navItems.push({
+      label:"Dashboard",
+      href:userRole[user?.role]
+    })
+  }
   const handleSignOut = async () => {
     await signOut();
     router.refresh();
