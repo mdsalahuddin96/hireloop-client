@@ -1,6 +1,9 @@
+import { getApplications } from '@/lib/api/applications';
+import { getSession } from 'better-auth/api';
 import React from 'react';
 
-const page = () => {
+const SeekerDashboardPage =async () => {
+
     return (
         <div>
             Seeker dashboard
@@ -8,4 +11,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default SeekerDashboardPage;
