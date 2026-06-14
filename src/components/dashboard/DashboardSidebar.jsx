@@ -7,45 +7,78 @@ import {
   Person,
   Briefcase,
   Bookmark,
+  PersonFill,
+  Factory,
 } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 import Link from "next/link";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
-import { FaFileAlt } from "react-icons/fa";
+import { FaFileAlt, FaMoneyBillWave } from "react-icons/fa";
 import { GoBriefcase } from "react-icons/go";
 
 export async function DashboardSidebar() {
-  const user=await getUserSession()
+  const user = await getUserSession();
   const recruiterNavItems = [
-    { icon: House, href:"/dashboard/recruiter", label: "Home" },
-    { icon: Briefcase, href:"/dashboard/recruiter/jobs", label: "Jobs" },
-    { icon: BsFileEarmarkPostFill , href:"/dashboard/recruiter/jobs/new", label: "Post a Job" },
-    { icon: GoBriefcase, href:"/dashboard/recruiter/company", label: "Company" },
+    { icon: House, href: "/dashboard/recruiter", label: "Home" },
+    { icon: Briefcase, href: "/dashboard/recruiter/jobs", label: "Jobs" },
+    {
+      icon: BsFileEarmarkPostFill,
+      href: "/dashboard/recruiter/jobs/new",
+      label: "Post a Job",
+    },
+    {
+      icon: GoBriefcase,
+      href: "/dashboard/recruiter/company",
+      label: "Company",
+    },
     { icon: Envelope, label: "Messages" },
     { icon: Person, label: "Profile" },
     { icon: Gear, label: "Settings" },
   ];
   const seekerNavItems = [
-  { icon: House, href: "/dashboard/seeker", label: "Home" },
-  { icon: Briefcase, href: "/dashboard/seeker/applications", label: "My Applications" },
-  { icon: Bookmark, href: "/dashboard/seeker/saved-jobs", label: "Saved Jobs" },
-  { icon: FaFileAlt, href: "/dashboard/seeker/resume", label: "Resume" },
-  { icon: Envelope, href: "/dashboard/seeker/messages", label: "Messages" },
-  { icon: Person, href: "/dashboard/seeker/profile", label: "Profile" },
-  { icon: Gear, href: "/dashboard/seeker/settings", label: "Settings" },
-];
-const role={
-  seeker:seekerNavItems,
-  recruiter:recruiterNavItems
-}
-  const navItems=role[user?.role]
+    { icon: House, href: "/dashboard/seeker", label: "Home" },
+    {
+      icon: Briefcase,
+      href: "/dashboard/seeker/applications",
+      label: "My Applications",
+    },
+    {
+      icon: Bookmark,
+      href: "/dashboard/seeker/saved-jobs",
+      label: "Saved Jobs",
+    },
+    { icon: FaFileAlt, href: "/dashboard/seeker/resume", label: "Resume" },
+    { icon: Envelope, href: "/dashboard/seeker/messages", label: "Messages" },
+    { icon: Person, href: "/dashboard/seeker/profile", label: "Profile" },
+    { icon: Gear, href: "/dashboard/seeker/settings", label: "Settings" },
+  ];
+  const adminNavItems = [
+    { icon: House, href: "/dashboard/admin", label: "Home" },
+    { icon: PersonFill, href: "/dashboard/admin/users", label: "Users" },
+    { icon: Briefcase, href: "/dashboard/admin/jobs", label: "Jobs" },
+    { icon: Factory, href: "/dashboard/admin/companies", label: "Companies" },
+    {
+      icon: FaMoneyBillWave,
+      href: "/dashboard/admin/subscriptions",
+      label: "Subscriptions",
+    },
+    { icon: Envelope, href: "/dashboard/admin/messages", label: "Messages" },
+    { icon: Person, href: "/dashboard/admin/profile", label: "Profile" },
+    { icon: Gear, href: "/dashboard/admin/settings", label: "Settings" },
+  ];
+  const role = {
+    seeker: seekerNavItems,
+    recruiter: recruiterNavItems,
+    admin:adminNavItems
+  };
+  const navItems = role[user?.role];
   const navContent = (
     <nav className="flex flex-col gap-1">
       {navItems.map((item) => (
         <Link
           key={item.label}
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
-          href={item?.href||"#"}
+          href={item?.href || "#"}
         >
           <item.icon className="size-5 text-muted" />
           {item.label}
@@ -55,9 +88,9 @@ const role={
   );
   return (
     <>
-    <aside className=" hidden w-64 border-r border-default p-4 lg:block">
+      <aside className=" hidden w-64 border-r border-default p-4 lg:block">
         {navContent}
-    </aside>
+      </aside>
       <Drawer>
         <Button className="lg:hidden" variant="secondary">
           <LayoutSideContentLeft />

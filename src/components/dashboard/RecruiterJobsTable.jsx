@@ -5,30 +5,6 @@ import { Table, Button } from "@heroui/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 
-const jobs = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    status: "Active",
-    applicants: 24,
-    postedAt: "Jun 05, 2026",
-  },
-  {
-    id: 2,
-    title: "Backend Developer",
-    status: "Closed",
-    applicants: 15,
-    postedAt: "Jun 01, 2026",
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    status: "Draft",
-    applicants: 0,
-    postedAt: "May 29, 2026",
-  },
-];
-
 export default function RecruiterJobsTable({ jobs }) {
   const getStatusBadge = (status) => {
     if (status === "active") {
