@@ -67,11 +67,11 @@ export default function PostJobForm({ company }) {
               <div>
                 <h3 className="font-semibold">{company.name}</h3>
                 <Chip
-                  color={`${company.status === "approved" ? "success" : company.status === "rejected" ? "danger" : "warning"}success`}
+                  color={`${company.status === "Approved" ? "success" : company.status === "Rejected" ? "danger" : "warning"}`}
                 >
-                  {company.status === "approved" ? (
+                  {company.status === "Approved" ? (
                     <CircleCheckFill width={12} />
-                  ) : company.status === "rejected" ? (
+                  ) : company.status === "Rejected" ? (
                     <Xmark width={12} />
                   ) : (
                     <Clock width={12} />
@@ -88,7 +88,7 @@ export default function PostJobForm({ company }) {
           </div>
         </section>
       </div>
-      {company.status === "approved" ? (
+      {company.status === "Approved" ? (
         <Form onSubmit={handleSubmit}>
           <div className="space-y-6">
             {/* JOB INFO */}

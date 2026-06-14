@@ -26,3 +26,8 @@ export const getJobsById=async(id)=>{
     const job=await serverFetch(`/jobs/${id}`)
     return job;
 }
+
+export const getCompanies=async()=>{
+    const companies=await serverFetch("/api/companies");
+    return companies;
+}
