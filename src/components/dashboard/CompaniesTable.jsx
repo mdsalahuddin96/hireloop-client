@@ -22,10 +22,13 @@ export default function CompaniesTable({ companies }) {
         return "default";
     }
   };
-  const handleApprove=async(id)=>{
-    const result=await updateCompany(id,"Approved")
-    console.log(result)
-  }
+  const handleApprove = async (id) => {
+    const result = await updateCompany(id, "Approved");
+    console.log(result);
+  };
+  const handleReject = async (id) => {
+    const result = await updateCompany(id, "Rejected");
+  };
   return (
     <div className="w-full bg-[#121212] p-6 rounded-xl border border-neutral-800">
       <Table aria-label="Companies management master table">
@@ -40,7 +43,10 @@ export default function CompaniesTable({ companies }) {
             <Table.Header>
               {/* সিলেকশনের জন্য প্রথম কলামটি HeroUI নিজে থেকেই হ্যান্ডেল করবে যদি selectionMode থাকে, 
                   তাই এখানে আপনার স্ট্রাকচার অনুযায়ী কলামগুলো সাজানো হলো */}
-              <Table.Column isRowHeader className="bg-transparent text-neutral-400 font-medium text-sm border-b border-neutral-800/50 pb-4">
+              <Table.Column
+                isRowHeader
+                className="bg-transparent text-neutral-400 font-medium text-sm border-b border-neutral-800/50 pb-4"
+              >
                 Company Name
               </Table.Column>
               <Table.Column className="bg-transparent text-neutral-400 font-medium text-sm border-b border-neutral-800/50 pb-4">
@@ -55,15 +61,18 @@ export default function CompaniesTable({ companies }) {
               <Table.Column className="bg-transparent text-neutral-400 font-medium text-sm border-b border-neutral-800/50 pb-4">
                 Date Submitted
               </Table.Column>
-              <Table.Column className="bg-transparent text-neutral-400 font-medium text-sm border-b border-neutral-800/50 pb-4" align="end">
+              <Table.Column
+                className="bg-transparent text-neutral-400 font-medium text-sm border-b border-neutral-800/50 pb-4"
+                align="end"
+              >
                 Actions
               </Table.Column>
             </Table.Header>
 
             <Table.Body>
               {companies?.map((company) => (
-                <Table.Row 
-                  key={company._id} 
+                <Table.Row
+                  key={company._id}
                   id={company._id}
                   className="border-b border-neutral-800/30 last:border-none hover:bg-neutral-900/40 transition-colors"
                 >
@@ -82,12 +91,6 @@ export default function CompaniesTable({ companies }) {
                       </span>
                     </div>
                   </Table.Cell>
-
-                  {/* Recruiter Email */}
-                  {/* <Table.Cell className="py-4 text-neutral-400 text-sm">
-                    {company.email || `recruiter@${company.name?.toLowerCase().replace(/\s+/g, "")}.com`}
-                  </Table.Cell> */}
-
                   {/* Industry */}
                   <Table.Cell className="py-4">
                     <Chip
@@ -97,6 +100,10 @@ export default function CompaniesTable({ companies }) {
                     >
                       {company.industry}
                     </Chip>
+                  </Table.Cell>
+                  {/* Jobs count*/}
+                  <Table.Cell className="py-4 text-neutral-400 text-sm">
+                    {company?.jobCount}
                   </Table.Cell>
 
                   {/* Status */}
@@ -113,15 +120,16 @@ export default function CompaniesTable({ companies }) {
 
                   {/* Date Submitted */}
                   <Table.Cell className="py-4 text-neutral-400 text-sm">
-                    {company.createdAt ? (
-                      new Date(company.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })
-                    ) : (
-                      "N/A"
-                    )}
+                    {company.createdAt
+                      ? new Date(company.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          },
+                        )
+                      : "N/A"}
                   </Table.Cell>
 
                   {/* Actions */}
@@ -132,7 +140,7 @@ export default function CompaniesTable({ companies }) {
                           size="sm"
                           variant="bordered"
                           className="border-emerald-950 text-emerald-500 hover:bg-emerald-500/10 min-w-[75px] h-8 font-medium"
-                          onClick={()=>handleApprove(company?._id)}
+                          onClick={() => handleApprove(company?._id)}
                         >
                           Approve
                         </Button>
@@ -142,6 +150,9 @@ export default function CompaniesTable({ companies }) {
                         size="sm"
                         variant="bordered"
                         className="border-rose-950 text-rose-500 hover:bg-rose-500/10 min-w-[75px] h-8 font-medium"
+                        onClick={() => {
+                          handleReject(company?._id);
+                        }}
                       >
                         Reject
                       </Button>
