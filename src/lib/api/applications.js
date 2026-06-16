@@ -1,6 +1,6 @@
-import { serverFetch } from "../core/serverMutation"
+import { protectedFetch } from "../core/serverMutation"
 
 export const getApplications=async(applicantId)=>{
-    const applications=await serverFetch(`/api/applications?applicantId=${applicantId}`)
+    const applications=await protectedFetch(`/api/applications?applicantId=${applicantId}`)
     return applications;
 }

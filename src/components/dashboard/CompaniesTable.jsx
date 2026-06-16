@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Table, Button, Chip, Avatar } from "@heroui/react";
+import { Table, Button, Chip } from "@heroui/react";
 import Image from "next/image";
 import { updateCompany } from "@/lib/actions/company";
+
 
 export default function CompaniesTable({ companies }) {
   // যদি আপনার টেবিলে সিলেকশন ফিচার লাগে, তাহলে এই স্টেটটি ব্যবহার করতে পারেন
@@ -24,7 +25,6 @@ export default function CompaniesTable({ companies }) {
   };
   const handleApprove = async (id) => {
     const result = await updateCompany(id, "Approved");
-    console.log(result);
   };
   const handleReject = async (id) => {
     const result = await updateCompany(id, "Rejected");

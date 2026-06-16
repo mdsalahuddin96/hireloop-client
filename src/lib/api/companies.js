@@ -1,5 +1,5 @@
 
-import { serverFetch } from "../core/serverMutation"
+import { protectedFetch, serverFetch } from "../core/serverMutation"
 import { getUserSession } from "../core/session";
 
 export const getRecruiterCompany=async(recruiterId)=>{
@@ -28,6 +28,6 @@ export const getJobsById=async(id)=>{
 }
 
 export const getCompanies=async()=>{
-    const companies=await serverFetch("/api/companies");
+    const companies=await protectedFetch("/api/companies");
     return companies;
 }
